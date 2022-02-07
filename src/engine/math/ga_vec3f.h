@@ -10,7 +10,7 @@
 */
 
 #include "ga_math.h"
-
+#include <cmath>
 /*
 ** Three component floating point vector.
 */
@@ -24,7 +24,9 @@ struct ga_vec3f
 
 	inline void negate()
 	{
-		// TODO: Homework 2
+		x = -x;
+		y = -y;
+		z = -z;
 	}
 
 	/*
@@ -42,8 +44,11 @@ struct ga_vec3f
 	*/
 	inline ga_vec3f operator+(const ga_vec3f& __restrict b) const \
 	{
-		// TODO: Homework 2
-		return zero_vector();
+		ga_vec3f result;
+		result.x = this->x + b.x;
+		result.y = this->y + b.y;
+		result.z = this->z + b.z;
+		return result;
 	}
 	
 	/*
@@ -60,8 +65,11 @@ struct ga_vec3f
 	*/
 	inline ga_vec3f operator-(const ga_vec3f& __restrict b) const
 	{
-		// TODO: Homework 2
-		return zero_vector();
+		ga_vec3f result;
+		result.x = this->x - b.x;
+		result.y = this->y - b.y;
+		result.z = this->z - b.z;
+		return result;
 	}
 	
 	/*
@@ -78,8 +86,11 @@ struct ga_vec3f
 	*/
 	inline ga_vec3f scale_result(float s) const
 	{
-		// TODO: Homework 2
-		return zero_vector();
+		ga_vec3f result;
+		result.x = this->x * s;
+		result.y = this->y * s;
+		result.z = this->z * s;
+		return result;
 	}
 	
 	/*
@@ -87,8 +98,8 @@ struct ga_vec3f
 	*/
 	inline float mag2() const
 	{
-		// TODO: Homework 2
-		return 0.0f;
+		return (this->x * this->x) + (this->y * this->y) +(this->z * this->z);
+		
 	}
 	
 	/*
@@ -104,7 +115,11 @@ struct ga_vec3f
 	*/
 	inline void normalize()
 	{
-		// TODO: Homework 2
+		float magnitude = mag();
+		this->x /= magnitude;
+		this->y /= magnitude;
+		this->z /= magnitude;
+		
 	}
 
 	/*
@@ -122,8 +137,8 @@ struct ga_vec3f
 	*/
 	inline float dot(const ga_vec3f& __restrict b) const
 	{
-		// TODO: Homework 2
-		return 0.0f;
+		
+		return (this->x * b.x) + (this->y * b.y) + (this->z * b.z);
 	}
 
 	/*
@@ -131,8 +146,11 @@ struct ga_vec3f
 	*/
 	inline ga_vec3f cross(const ga_vec3f& __restrict b) const
 	{
-		// TODO: Homework 2
-		return zero_vector();
+		ga_vec3f result;
+		result.x = (this->y * b.z) - (this->z * b.y);
+		result.y = (this->x * b.z) - (this->z * b.x);
+		result.z = (this->x * b.y) - (this->y - b.x);
+		return result;
 	}
 
 	/*
@@ -140,8 +158,7 @@ struct ga_vec3f
 	*/
 	inline ga_vec3f project_onto(const ga_vec3f& __restrict b) const
 	{
-		// TODO: Homework 2
-		return zero_vector();
+		return this->scale_result(this->dot(b) / b.mag2());
 	}
 
 	/*

@@ -17,6 +17,8 @@
 */
 struct ga_mat4f
 {
+	float deg2Rad = M_PI / 180.0f;
+
 	float data[4][4];
 
 	/*
