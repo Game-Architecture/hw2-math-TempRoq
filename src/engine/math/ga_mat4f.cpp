@@ -11,6 +11,7 @@
 
 #include "math/ga_math.h"
 
+#include <iostream>
 #include <cmath>
 
 // x is Col, Y = ROW
@@ -32,33 +33,38 @@ void ga_mat4f::make_translation(const ga_vec3f& __restrict t)
 
 void ga_mat4f::make_scaling(float s)
 {
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 3; i++) {
 		data[i][i] *= s;
 	}
 }
 
 void ga_mat4f::make_rotation_x(float angle)
 {
-	data[1][1] *= cosf(angle * deg2Rad);
-	data[1][2] *= sinf(angle * deg2Rad);
-	data[2][1] *= -sinf(angle * deg2Rad);
-	data[2][2] *= cosf(angle * deg2Rad);
+
+	make_identity();
+	data[1][1] = cosf(angle);
+	data[1][2] = sinf(angle);
+	data[2][1] = -sinf(angle);
+	data[2][2] = cosf(angle);
+
 }
 
 void ga_mat4f::make_rotation_y(float angle)
 {
-	data[0][0] *= cosf(angle * deg2Rad);
-	data[0][2] *= -sinf(angle * deg2Rad);
-	data[2][0] *= sinf(angle * deg2Rad);
-	data[2][2] *= cosf(angle * deg2Rad);
+	make_identity();
+	data[0][0] = cosf(angle);
+	data[0][2] = -sinf(angle);
+	data[2][0] = sinf(angle);
+	data[2][2] = cosf(angle);
 }
 
 void ga_mat4f::make_rotation_z(float angle)
 {
-	data[0][0] *= cosf(angle * deg2Rad);
-	data[0][1] *= -sinf(angle * deg2Rad);
-	data[1][0] *= sinf(angle * deg2Rad);
-	data[1][1] *= cosf(angle * deg2Rad);
+	make_identity();
+	data[0][0] = cosf(angle);
+	data[0][1] = sinf(angle);
+	data[1][0] = -sinf(angle);
+	data[1][1] = cosf(angle);
 }
 
 void ga_mat4f::translate(const ga_vec3f& __restrict t)

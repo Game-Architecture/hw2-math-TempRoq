@@ -11,16 +11,30 @@
 
 #include "math/ga_vec3f.h"
 #include "math/ga_vec4f.h"
+#include <string>
+#include <iostream>
 
 /*
 ** Floating point 4x4 matrix.
 */
 struct ga_mat4f
 {
-	float deg2Rad = M_PI / 180.0f;
+	
 
 	float data[4][4];
 
+	void print() {
+		std::string s = "";
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				
+				s += std::to_string(int(this->data[i][j]));
+				s += ' ';
+			}
+			s += '\n';
+		}
+		std::cout << s << std::endl;
+	}
 	/*
 	** Build an identity matrix.
 	*/

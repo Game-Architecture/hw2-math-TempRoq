@@ -11,6 +11,7 @@
 
 #include "ga_math.h"
 #include <cmath>
+
 /*
 ** Three component floating point vector.
 */
@@ -148,8 +149,8 @@ struct ga_vec3f
 	{
 		ga_vec3f result;
 		result.x = (this->y * b.z) - (this->z * b.y);
-		result.y = (this->x * b.z) - (this->z * b.x);
-		result.z = (this->x * b.y) - (this->y - b.x);
+		result.y = - ((this->x * b.z) - (this->z * b.x));
+		result.z = (this->x * b.y) - (this->y * b.x);
 		return result;
 	}
 
@@ -158,9 +159,9 @@ struct ga_vec3f
 	*/
 	inline ga_vec3f project_onto(const ga_vec3f& __restrict b) const
 	{
-		return this->scale_result(this->dot(b) / b.mag2());
+		ga_vec3f res = b.scale_result(this->dot(b) / b.mag());
+		return res;
 	}
-
 	/*
 	** Determine if this vector is largely equivalent to another.
 	*/
