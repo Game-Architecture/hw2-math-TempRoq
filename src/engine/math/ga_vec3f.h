@@ -11,6 +11,7 @@
 
 #include "ga_math.h"
 #include <cmath>
+#include <iostream>
 
 /*
 ** Three component floating point vector.
@@ -29,6 +30,11 @@ struct ga_vec3f
 		y = -y;
 		z = -z;
 	}
+
+	void ga_vec3f::print() {
+		std::cout << "X: " << axes[0] << " Y: " << axes[1] << " Z: " << axes[2] << std::endl;
+	}
+
 
 	/*
 	** Return a negated version of the vector.

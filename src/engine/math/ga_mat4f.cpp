@@ -14,6 +14,19 @@
 #include <iostream>
 #include <cmath>
 
+void ga_mat4f::print() {
+	std::string s = "";
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+
+			s += std::to_string(int(this->data[i][j]));
+			s += ' ';
+		}
+		s += '\n';
+	}
+	std::cout << s << std::endl;
+}
+
 // x is Col, Y = ROW
 void ga_mat4f::make_identity()
 {
@@ -26,9 +39,11 @@ void ga_mat4f::make_identity()
 
 void ga_mat4f::make_translation(const ga_vec3f& __restrict t)
 {
-	data[0][3] = t.x;
-	data[1][3] = t.y;
-	data[2][3] = t.z;
+
+	make_identity();
+	data[3][0] = t.x;
+	data[3][1] = t.y;
+	data[3][2] = t.z;
 }
 
 void ga_mat4f::make_scaling(float s)
@@ -107,11 +122,10 @@ ga_mat4f ga_mat4f::operator*(const ga_mat4f& __restrict b) const
 	ga_mat4f result;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			int res = 0;
+			result.data[i][j] = 0;
 			for (int k = 0; k < 4; k++) {
-				res += this->data[i][k] * b.data[k][j];
+				result.data[i][j] += this->data[i][k] * b.data[k][j];
 			}
-			result.data[i][j] = res;
 		}
 	}
 	return result;
@@ -129,9 +143,9 @@ ga_vec4f ga_mat4f::transform(const ga_vec4f& __restrict in) const
 {
 	ga_vec4f result;
 
-	result.x = (in.x * this->data[0][0]) + (in.y * this->data[0][1]) + (in.z * this->data[0][2]) + (in.w * this->data[0][3]);
-	result.y = (in.x * this->data[1][0]) + (in.y * this->data[1][1]) + (in.z * this->data[1][2]) + (in.w * this->data[1][3]);
-	result.z = (in.x * this->data[2][0]) + (in.y * this->data[2][1]) + (in.z * this->data[2][2]) + (in.w * this->data[2][3]);
+	result.x = (in.x * this->data[0][0]) + (in.y * this->data[0][1]) + (in.z * this->data[0][2]) + (in.w * this->data[3][0]);
+	result.y = (in.x * this->data[1][0]) + (in.y * this->data[1][1]) + (in.z * this->data[1][2]) + (in.w * this->data[3][1]);
+	result.z = (in.x * this->data[2][0]) + (in.y * this->data[2][1]) + (in.z * this->data[2][2]) + (in.w * this->data[3][2]);
 	result.w = (in.x * this->data[3][0]) + (in.y * this->data[3][1]) + (in.z * this->data[3][2]) + (in.w * this->data[3][3]);
 
 	return result;
@@ -140,18 +154,30 @@ ga_vec4f ga_mat4f::transform(const ga_vec4f& __restrict in) const
 ga_vec3f ga_mat4f::transform_vector(const ga_vec3f& __restrict in) const
 {
 	ga_vec3f result;
-	result.x = (in.x * this->data[0][0]) + (in.y * this->data[0][1]) + (in.z * this->data[0][2]);
-	result.y = (in.x * this->data[1][0]) + (in.y * this->data[1][1]) + (in.z * this->data[1][2]);
-	result.z = (in.x * this->data[2][0]) + (in.y * this->data[2][1]) + (in.z * this->data[2][2]);
+
+
+	result.x = (in.x * this->data[0][0]) + (in.y * this->data[1][0]) + (in.z * this->data[2][0]);
+	result.y = (in.x * this->data[0][1]) + (in.y * this->data[1][1]) + (in.z * this->data[2][1]);
+	result.z = (in.x * this->data[0][2]) + (in.y * this->data[1][2]) + (in.z * this->data[2][2]);
 	return result;
 
 }
 
 ga_vec3f ga_mat4f::transform_point(const ga_vec3f& __restrict in) const
 {
-	// TODO: Homework 2
 
-	return ga_vec3f::zero_vector();
+	ga_vec3f result;
+	result.x = (in.x * this->data[0][0]) + (in.y * this->data[1][0]) + (in.z * this->data[2][0]) + this->data[3][0];
+	result.y = (in.x * this->data[0][1]) + (in.y * this->data[1][1]) + (in.z * this->data[2][1]) + this->data[3][1];
+	result.z = (in.x * this->data[0][2]) + (in.y * this->data[1][2]) + (in.z * this->data[2][2]) + this->data[3][2];
+	float w =  (in.x * this->data[0][3]) + (in.y * this->data[1][3]) + (in.z * this->data[2][3]) + this->data[3][3];
+
+	if (w != 0) {
+		result.x /= w;
+		result.y /= w;
+		result.z /= w;
+	}
+	return result;
 }
 
 void ga_mat4f::transpose()
